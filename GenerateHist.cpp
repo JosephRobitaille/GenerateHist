@@ -107,7 +107,6 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + b;
 		if (utility > bestutility)
 		{
-			besti = i;
 			bestday = alternatives.at(i).day;
 			bestutility = utility;
 		}
