@@ -92,13 +92,13 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 {
 	double bestutility = betas.at(betas.size()-1);
 	int bestday = -1;
+	std::default_random_engine generator;
+	std::extreme_value_distribution<double> gumbel(0.0, 1.0);
 	for (int i = 0; i < alternatives.size(); i++)
 	{
 		int d = alternatives.at(i).day;
 		while (d > 5)
 			d -= 5;
-		std::default_random_engine generator;
-		std::extreme_value_distribution<double> gumbel(0.0, 1.0);
 		double utility = betas.at(betas.size() - 1);
 		double a = betas.at(betas.size() - 2)*alternatives.at(i).price;
 		if (alternatives.at(i).day != -1)
@@ -109,15 +109,9 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 			bestutility = utility;
 		}
 	}
-	for (int i = 0; i < alternatives.size()-1; i++)
-	{
-		if (alternatives.at(i).day == bestday)
-		{
-			Alternative alt = alternatives.at(i);
-			alternatives.at(i) = alternatives.at(0);
-			alternatives.at(0) = alt;
-		}
-	}
+	Alternative alt = alternatives.at(bestday);
+	alternatives.at(bestday) = alternatives.at(0);
+	alternatives.at(0) = alt;
 	return alternatives;
 }
 int main()
