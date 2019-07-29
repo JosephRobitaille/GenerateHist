@@ -88,12 +88,13 @@ vector<int> choosedays(int nb_days,int timehorizon)
 	return days_chosen;
 }
 
-vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> betas)
+vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> betas, extreme_value_distribution<double> gumbel)
 {
 	double bestutility = betas.at(betas.size()-1);
 	int bestday = -1;
-	std::default_random_engine generator;
-	std::extreme_value_distribution<double> gumbel(0.0, 1.0);
+	int besti = 0;
+	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
+	std::default_random_engine generator(seed);
 	for (int i = 0; i < alternatives.size(); i++)
 	{
 		int d = alternatives.at(i).day;
@@ -101,10 +102,12 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 			d -= 5;
 		double utility = betas.at(betas.size() - 1);
 		double a = betas.at(betas.size() - 2)*alternatives.at(i).price;
+		double b = gumbel(generator);
 		if (alternatives.at(i).day != -1)
-			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + gumbel(generator);
+			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + b;
 		if (utility > bestutility)
 		{
+			besti = i;
 			bestday = alternatives.at(i).day;
 			bestutility = utility;
 		}
@@ -117,7 +120,7 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 int main()
 {
 	//We define the parameters and initialise vectors (setup)
-	int Number_of_historics = 10; int Nb_Cust = 1000; int nb_Segments = 1;
+	int Number_of_historics = 1; int Nb_Cust = 1000; int nb_Segments = 1;
 	
 	double beta_a = 1.00; double beta_e = 1.25; double beta_b = 0.9; 
 	double beta_c = 0.9; double beta_d = 1.00; double beta_p = -1.;
@@ -131,7 +134,7 @@ int main()
 	vbetas.push_back(beta_e);
 	vbetas.push_back(beta_p);
 	vbetas.push_back(beta_0);
-
+	std::extreme_value_distribution<double> gumbel(0.0, 1.0);
 	//We iterate on the number of instances we want for the parameters defined
 	for (int i = 1; i <= Number_of_historics; i++)
 	{
@@ -168,7 +171,7 @@ int main()
 			alternatives.push_back(alt);
 
 			//We reorder the vector of options so the choice of the customer is first
-			vector<Alternative> alternatives_ordered = makechoice(alternatives, vbetas);
+			vector<Alternative> alternatives_ordered = makechoice(alternatives, vbetas, gumbel);
 
 			//We put the options in the format wanted 
 			for (int k = 0; k < alternatives_ordered.size(); k++)
@@ -186,3 +189,4 @@ int main()
 	}
 	cin.get();
 }
+
