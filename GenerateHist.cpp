@@ -95,18 +95,18 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 	int besti = 0;
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
+	double vrng = gumbel(generator);
 	for (int i = 0; i < alternatives.size(); i++)
 	{
 		int d = alternatives.at(i).day;
 		while (d > 5)
 			d -= 5;
 		double utility = betas.at(betas.size() - 1);
-		double a = betas.at(betas.size() - 2)*alternatives.at(i).price;
-		double b = gumbel(generator);
 		if (alternatives.at(i).day != -1)
-			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + b;
+			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + vrng;
 		if (utility > bestutility)
 		{
+			besti = i;
 			bestday = alternatives.at(i).day;
 			bestutility = utility;
 		}
@@ -119,7 +119,7 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 int main()
 {
 	//We define the parameters and initialise vectors (setup)
-	int Number_of_historics = 1; int Nb_Cust = 1000; int nb_Segments = 1;
+	int Number_of_historics = 10; int Nb_Cust = 1000; int nb_Segments = 1;
 	
 	double beta_a = 1.00; double beta_e = 1.25; double beta_b = 0.9; 
 	double beta_c = 0.9; double beta_d = 1.00; double beta_p = -1.;
@@ -188,4 +188,3 @@ int main()
 	}
 	cin.get();
 }
-
