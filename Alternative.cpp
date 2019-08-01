@@ -13,23 +13,13 @@ class Alternative
 		double price;
 		void assignday(int nb_days, int daychosen)
 		{
-			day = daychosen;
-			for (int i = 0; i < nb_days; i++)
-			{
-				if (i == day)
-				{
-					Attribut valjour(1);
-					attributs.push_back(valjour);
-				}
-				else
-				{
-					Attribut valjour(0);
-					attributs.push_back(valjour);
-				}
-			}
+			attributs.resize(nb_days);
+			if(daychosen != -1)
+				attributs[daychosen].valeur = 1;
+			
 			if (daychosen == -1)
 				price = 0.0;
 			else
-				price = (double)rand() / ((double)RAND_MAX + 1);
+				price = ((double)rand() / ((double)RAND_MAX + 1));
 		}
 };
