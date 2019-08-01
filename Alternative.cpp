@@ -20,6 +20,6 @@ class Alternative
 			if (daychosen == -1)
 				price = 0.0;
 			else
-				price = ((double)rand() / ((double)RAND_MAX + 1));
+				price = 5*((double)rand() / ((double)RAND_MAX + 1));
 		}
 };
