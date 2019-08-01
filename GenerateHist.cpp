@@ -238,13 +238,14 @@ vector<Alternative> makechoice(vector<Alternative> alternatives, vector<double> 
 	int besti = 0;
 	unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
+	double vrng;
 	for (int i = 0; i < alternatives.size(); i++)
 	{
 		int d = alternatives.at(i).day;
 		while (d > 5)
 			d -= 5;
 		double utility = betas.at(betas.size() - 1);
-		double vrng = gumbel(generator);
+		vrng = gumbel(generator);
 		if (alternatives.at(i).day != -1)
 			utility = betas.at(betas.size() - 1) + betas.at(d) - betas.at(betas.size() - 2)*alternatives.at(i).price + vrng;
 		if (utility > bestutility)
