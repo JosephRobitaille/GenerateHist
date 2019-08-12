@@ -92,7 +92,7 @@ vector<int> choosedays(int nb_days,int timehorizon)
 
 void makechoice(vector<Alternative> & alternatives, vector<double> & betas, vector<Alternative> & chosen)
 {
-	double bestutility = betas.back();
+	double bestutility = 0.0;
 	int bestday = -1;
 	int besti = 0;
 	for (int i = 0; i < alternatives.size(); i++)
@@ -104,7 +104,6 @@ void makechoice(vector<Alternative> & alternatives, vector<double> & betas, vect
 		double vrng = gumbel(generator);
 		if (alternatives[i].day != -1)
 		{
-
 			utility = betas.back() + betas[d] + betas[betas.size() - 2] * alternatives[i].price + vrng;
 		}
 		else
@@ -116,7 +115,6 @@ void makechoice(vector<Alternative> & alternatives, vector<double> & betas, vect
 			bestutility = utility;
 		}
 	}
-
 	chosen = alternatives;
 	if (bestday == -1)
 		besti = alternatives.size() - 1;
@@ -129,11 +127,11 @@ int main()
 	gumbel = std::extreme_value_distribution<double>(1.0, pow(3.1415926,2)/6);
 	srand(seed);
 	//We define the parameters and initialise vectors (setup)
-	int Number_of_historics = 1; int Nb_Cust = 10000; int nb_Segments = 1;
+	int Number_of_historics = 1; int Nb_Cust = 100000; int nb_Segments = 1;
 	
-	double beta_a = 2.00; double beta_e = 3.0; double beta_b = 1.5; 
-	double beta_c = 1.5; double beta_d = 2.00; double beta_p = -1.0;
-	double beta_0 = 1.0;
+	double beta_a = 2.50; double beta_e = 4.0; double beta_b = 2.0; 
+	double beta_c = 2.0; double beta_d = 3.00; double beta_p = -2.0;
+	double beta_0 = 2.0;
 	int horizon_temp = 5;
 	vector<double> vbetas;
 	vbetas.push_back(beta_a);
@@ -179,7 +177,6 @@ int main()
 			Alternative alt;
 			alt.assignday(days_toassign, -1);
 			alternatives.push_back(alt);
-
 			//We reorder the vector of options so the choice of the customer is first
 			vector<Alternative> alternatives_ordered;
 			makechoice(alternatives, vbetas, alternatives_ordered);
