@@ -13,10 +13,10 @@ class Alternative
 		double price;
 		void assignday(int nb_days, int daychosen)
 		{
+			day = daychosen;
 			attributs.resize(nb_days);
-			if(daychosen != -1)
+			if (daychosen != -1)
 				attributs[daychosen].valeur = 1;
-			
 			if (daychosen == -1)
 				price = 0.0;
 			else
